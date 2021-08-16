@@ -1,7 +1,7 @@
 <template>
   <div id="main">
-    <div class="lists">
-      <div class="user"><h6>{{user}}</h6><button type="submit" class="btn btn-primary" @click="logout">выйти</button></div>
+    <div class="lists" v-if="widthCondition || CONDITION_CURRENT_ID">
+      <div class="user"><h5>{{ CURRENT_USER }}</h5><button type="submit" class="btn btn-primary" @click="logout">выйти</button></div>
       <ListFilter />
       <ul class="list-group list__body">
         <List :list="list" v-for="list in FILTERED_LISTS" :key="list.id" />
@@ -18,11 +18,13 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from "vuex";
+import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 import List from "../components/List";
 import Adder from "../components/Adder";
 import ListFilter from "../components/ListFilter";
 import Modal from "../components/Modal";
+import Cookies from 'js-cookie'
+
 
 export default {
   name: "Main",
@@ -34,17 +36,20 @@ export default {
   },
   data() {
     return {
-      user: localStorage.getItem("user")
+      widthCondition: null,
     }
   },
   async created() {
     await this.GET_LISTS_FROM_BACK()
     this.GET_DEALS_FROM_BACK()
-
-
+    window.addEventListener('resize', this.onResize);
+    this.onResize();
   },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.onResize);
+  },  
   computed: {
-    ...mapGetters(["FILTERED_LISTS"]),
+    ...mapGetters(["FILTERED_LISTS", "CURRENT_USER", "CONDITION_CURRENT_ID"])
   },
   methods: {
     ...mapActions(["CREATE_LIST", "GET_LISTS_FROM_BACK", "GET_DEALS_FROM_BACK", "EXIT"]),
@@ -52,13 +57,18 @@ export default {
     logout() {
       this.EXIT
       localStorage.clear()
+      Cookies.remove('access_token')
       this.$router.push('/authorization')
-    }
+    },
+    onResize() {
+      this.widthCondition = document.documentElement.clientWidth > 500 ? true : false;
+    },
   },
   watch: {
     $route() {
       this.CHANGE_THE_CURRENT_ID(this.$route.params.id);
     },
+    
   },
 };
 </script>

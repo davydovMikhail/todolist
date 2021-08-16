@@ -4,6 +4,7 @@ import Main from '../views/Main'
 import Todos from '../views/Todos'
 import Authorization from '../views/Authorization'
 import Registration from '../views/Registration'
+import Cookies from 'js-cookie'
 
 Vue.use(VueRouter)
 
@@ -19,7 +20,10 @@ let routes = [
         name: "Todos",
         props: true
       }
-    ]
+    ],
+    meta: { 
+      requiresAuth: true
+    }
   },
   {
     path: '/authorization',
@@ -40,11 +44,21 @@ const router = new VueRouter({
 })
 
 
-router.beforeEach((to, from, next) => {
-  if (((to.name !== ('authorization')) && (to.name !== ('registration'))) && !localStorage.getItem('access_token')) next({ name: 'authorization' })
-  else next()
-})
 
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!Cookies.get('access_token')) {
+      next({
+        path: '/authorization',
+        query: { redirect: to.fullPath }
+      })
+    } else {
+      next()
+    }
+  } else {
+    next() 
+  }
+})
 
 
 

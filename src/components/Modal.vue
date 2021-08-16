@@ -4,12 +4,9 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">{{ MODAL_FILLER.title }}</h5>
-                    <!-- <h5 class="modal-title">title</h5> -->
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="close">&times;</button>
-                            <!-- <span aria-hidden="true">&times;</span> -->
                 </div>
                 <div class="modal-body">
-                    <!-- <p>message</p> -->
                     <p>{{ MODAL_FILLER.message }}</p>
                 </div>
                 <div class="modal-footer">
@@ -18,10 +15,7 @@
                     v-for="button in MODAL_FILLER.buttons"
                     :key="button.title"
                     @click="button.method"
-                    :class="[button.type === 'OK' ? 'btn_ok' : 'btn_action']"
                     >{{ button.name }}</button>
-                    <!-- <button type="button" class="btn btn-danger">Save changes</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
                 </div>
             </div>
         </div>
@@ -40,8 +34,13 @@ export default {
     }
     },
     computed: {
-        ...mapGetters(["MODAL_FILLER", "WINDOW_SWITCH"]),
-        // ...mapState(["modalDisplay"])
+        ...mapGetters(["MODAL_FILLER", "WINDOW_SWITCH"])
     }
 }
 </script>
+
+<style scoped>
+p {
+    word-wrap: break-word;
+}
+</style>

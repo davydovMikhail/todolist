@@ -13,7 +13,7 @@
                     <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Введите пароль" v-model="password">
                     </div>
                 </div>
-                <button type="button" class="btn btn-primary" @click="User">Войти</button>
+                <button type="button" class="btn btn-primary" @click="login">Войти</button>
                 <router-link tag="a" :to="{ name: 'registration' }">Зарегистрироваться</router-link>
             </form>
 
@@ -21,7 +21,6 @@
 </template>
 
 <script>
-// import { defineComponent } from '@vue/composition-api'
 import { mapActions } from 'vuex'
 
 
@@ -34,7 +33,7 @@ export default ({
     },
     methods: {
         ...mapActions(['AUTHORIZATION_REQUEST']),
-        User() {
+        login() {
             let obj = {
                 email: this.email,
                 password: this.password

@@ -12,12 +12,13 @@ const actions = {
             name: given.trim(),
             count_tasks: 0,
             is_completed: false,
-            is_closed: false
+            is_closed: false,
         }
         
             try {
                 const response = await axios.post(`${api}/list/create`, {attributes: newListObj})
                 commit('ADD_LIST', response.data.data.attributes)
+                commit('ADD_LIST', newListObj) // удалить
               } catch(e) {
                   alert('что-то пошло не так')
                   console.log(e)
@@ -30,7 +31,6 @@ const actions = {
             buttons: [
                 {
                     name: 'OK',
-                    type: 'OK',
                     method: () => {
                         
                         commit( 'CHANGE_MODAL_DISPLAY')
@@ -56,7 +56,6 @@ const actions = {
             buttons: [
                 {
                     name: 'OK',
-                    type: 'OK',
                     method: () => {
                         commit( 'CHANGE_MODAL_DISPLAY')
                     }
@@ -84,7 +83,6 @@ const actions = {
             buttons: [
                 {
                     name: 'OK',
-                    type: 'OK',
                     method: async () => {
                         try {
                             await axios.delete(`${api}/list/delete/${list.id}`)
@@ -105,7 +103,6 @@ const actions = {
                 },
                 {
                     name: 'Отмена',
-                    type: 'Cancel',
                     method: () => {
                         commit( 'CHANGE_MODAL_DISPLAY')
                         }
@@ -122,7 +119,6 @@ const actions = {
             buttons: [
                 {
                     name: 'OK',
-                    type: 'OK',
                     method: async () => {
 
                         try {
@@ -146,7 +142,6 @@ const actions = {
                 },
                 {
                     name: 'Отмена',
-                    type: 'Cancel',
                     method: () => {
                         commit( 'CHANGE_MODAL_DISPLAY')
                         }
@@ -236,12 +231,6 @@ const mutations = {
     COUNT_DEAL_DECREMENT(state) {
         state.lists.find(x => x.id == router.currentRoute.params.id).count_tasks--
     },
-    // SET_LISTS(state, arr) {
-    //     state.lists = arr
-    // },
-    // SET_DEALS(state, arr) {
-    //     state.deals = arr
-    // },
     SET_LISTS: (state, arr) => state.lists = arr,
     SET_DEALS: (state, arr) => state.deals = arr,
 }
@@ -275,16 +264,6 @@ const getters = {
             return state.lists.filter(e => !e.is_completed)
         }
     },
-    // FILTERED_LISTS: (state, getters) => {    
-    //     switch (state.list_category) {
-    //       case 'all':
-    //         return getters.ALL_LISTS
-    //       case 'finished':
-    //         return getters.ALL_LISTS.filter(e => e.is_completed)
-    //       default:
-    //         return getters.ALL_LISTS.filter(e => !e.is_completed)
-    //     }
-    // },
 
     ALL_DEALS: (state) => {
         let dd = state.deals.filter(function(number) {
@@ -302,6 +281,9 @@ const getters = {
 
     WINDOW_SWITCH(state) {
         return state.modalDisplay
+    },
+    CONDITION_CURRENT_ID(state) {
+        return !state.current_id ? true : false
     }
 }
 

@@ -2,7 +2,7 @@
     <div class="list__main">
         <router-link tag="li" class="list__item" :to="{ name: 'Todos', params: { id: list.id }}">
             <div  class="list-group-item list__li"
-            :class="[ list.count_tasks == 0 ? '' : list.is_completed ? 'pale_gray' : 'green']"
+            :class="itemBackground" 
             >{{list.name}}</div>
         </router-link>
         <Remover @deleteEl="DELETE_LIST(list)"/>
@@ -26,6 +26,11 @@ export default {
     ...mapActions([
         'DELETE_LIST'
     ]),
+    computed: {
+    itemBackground() {
+        return this.list.count_tasks == 0 ? '' : this.list.is_completed ? 'pale_gray' : 'green'
     }
+    }
+}
 }
 </script>
