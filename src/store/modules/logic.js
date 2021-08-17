@@ -18,7 +18,6 @@ const actions = {
             try {
                 const response = await axios.post(`${api}/list/create`, {attributes: newListObj})
                 commit('ADD_LIST', response.data.data.attributes)
-                commit('ADD_LIST', newListObj) // удалить
               } catch(e) {
                   alert('что-то пошло не так')
                   console.log(e)

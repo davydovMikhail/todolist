@@ -18,6 +18,7 @@ const actions = {
     async AUTHORIZATION_REQUEST({commit}, Obj) {
       try {
         let response = await axios.post(`${api}/user/login`, { ...Obj })
+        console.log(response)
         let access_token = response.data.data.access_token
         Cookies.set('access_token', access_token);
         const allUsers = await axios.get(`${api}/user/`)
