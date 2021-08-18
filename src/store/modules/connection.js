@@ -18,16 +18,27 @@ const actions = {
     async AUTHORIZATION_REQUEST({commit}, Obj) {
       try {
         let response = await axios.post(`${api}/user/login`, { ...Obj })
-        console.log(response)
         let access_token = response.data.data.access_token
-        Cookies.set('access_token', access_token);
-        const allUsers = await axios.get(`${api}/user/`)
-        let currentUser = allUsers.data.data.items.filter(u => u.email === Obj.email)[0]
-        commit('SET_CURRENT_USER', currentUser.name)
-        localStorage.setItem('user', currentUser.name)
+        Cookies.set('access_token', access_token)
+        commit('SET_EMAIL', Obj.email)
+        localStorage.setItem('email', Obj.email)
+        if (access_token) {
+          axios.defaults.headers.common['Authorization'] = 'Bearer ' + access_token
+        }
         router.push('/')
       } catch(e) {
         alert("что-то пошло не так")
+      }
+    },
+
+    async GET_CURRENT_USER({commit, getters}) {
+      try {
+        const allUsers = await axios.get(`${api}/user/`)
+        let currentUser = allUsers.data.data.items.filter(u => u.email === state.email)[0]
+        commit('SET_CURRENT_USER', currentUser.name)
+        localStorage.setItem('user', currentUser.name)
+      } catch(e) {
+        console.log(e)
       }
     },
 
@@ -37,13 +48,16 @@ const actions = {
 
 }
 const mutations = {
-  SET_CURRENT_USER: (state, user) => state.currentUser = user
+  SET_CURRENT_USER: (state, user) => state.currentUser = user,
+  SET_EMAIL: (state, email) => state.email = email 
 }
 const state = {
-  currentUser: localStorage.getItem('user') || null
+  currentUser: localStorage.getItem('user') || null,
+  email: localStorage.getItem('email') || null
 }
 const getters = {
-  CURRENT_USER: state => state.currentUser
+  CURRENT_USER: state => state.currentUser,
+  EMAIL: state => state.email
 }
 
 

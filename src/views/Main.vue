@@ -40,11 +40,16 @@ export default {
     }
   },
   async created() {
-    await this.GET_LISTS_FROM_BACK()
-    this.GET_DEALS_FROM_BACK()
     window.addEventListener('resize', this.onResize);
     this.onResize();
   },
+
+  async mounted() {
+      await this.GET_LISTS_FROM_BACK()
+      await this.GET_DEALS_FROM_BACK()
+      await this.GET_CURRENT_USER()
+  },
+
   beforeDestroy() {
     window.removeEventListener('resize', this.onResize);
   },  
@@ -52,7 +57,7 @@ export default {
     ...mapGetters(["FILTERED_LISTS", "CURRENT_USER", "CONDITION_CURRENT_ID"])
   },
   methods: {
-    ...mapActions(["CREATE_LIST", "GET_LISTS_FROM_BACK", "GET_DEALS_FROM_BACK", "EXIT"]),
+    ...mapActions(["CREATE_LIST", "GET_LISTS_FROM_BACK", "GET_DEALS_FROM_BACK", "EXIT", "GET_CURRENT_USER"]),
     ...mapMutations(["CHANGE_THE_CURRENT_ID"]),
     logout() {
       this.EXIT
@@ -61,7 +66,7 @@ export default {
       this.$router.push('/authorization')
     },
     onResize() {
-      this.widthCondition = document.documentElement.clientWidth > 500 ? true : false;
+      this.widthCondition = document.documentElement.clientWidth > 890 ? true : false;
     },
   },
   watch: {

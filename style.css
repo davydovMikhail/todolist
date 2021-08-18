@@ -58,7 +58,8 @@ body {
 }
 #main {
   margin: 0 auto;
-  width: 1200px;
+  max-width: 1200px;
+  min-width: 320px;
   height: 100%;
   display: flex;
 }
@@ -214,7 +215,7 @@ a {
 h5 {
   margin-right: 10px;
 }
-@media (max-width: 500px) {
+@media (max-width: 890px) {
   .lists {
     position: relative;
     width: 100%;
@@ -231,7 +232,7 @@ h5 {
     border-radius: 0 0 0 0;
   }
   #main {
-    max-width: 500px;
+    max-width: 890px;
     min-width: 320px;
   }
 }
